@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPS-IT škola</title>
+    <link href="{% static 'skola/style.css' %}" rel="stylesheet">
+   
+</head>
+<body>
+    <div class="title">
+        <h1>SOCKA</h1>
+        <h3>SPS-IT</h3>
+    </div>
+
+    <div class="sections">
+        {% if ucitelia %}
+        <div class="container">
+            <h2><a href="{% url 'ucitelia' %}">Učitelia:</a></h2>
+            <ul>
+                {% for ucitel in ucitelia %}
+                <li>
+                    <a href="{% url 'ucitel' ucitel=ucitel.id %}">
+                    {{ucitel}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if studenti %}
+        <div class="container">
+            <h2><a href="{% url 'studenti' %}">Študenti:</a></h2>
+            <ul>
+                {% for student in studenti %}
+                <li>
+                    <a href="{% url 'student' student=student.id %}">
+                    {{student}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+      
+    </div>
+    
+</body>
+</html>
