@@ -20,6 +20,7 @@
             color: #fff;
             padding: 40px 0;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         
         .title h1 {
@@ -32,6 +33,20 @@
             margin: 0;
             font-size: 24px;
             font-weight: 300;
+        }
+        
+        .new-topic-button {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
         }
         
         .filter-section {
@@ -54,21 +69,63 @@
         }
         
         .filter-section input, .filter-section select {
-            padding:
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .sections {
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        #tema-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .tema-item {
+            padding: 20px;
+            margin: 10px 0;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tema-title {
+            font-size: 24px;
+            margin: 0 0 10px;
+        }
+        
+        .tema-description {
+            margin: 0 0 10px;
+        }
+        
+        .tema-consultant, .tema-student, .tema-availability {
+            margin: 0;
+        }
         
     </style>
 </head>
 <body>
     <div class="title">
-        <h1>SOCKA</h1>
+        <button class="new-topic-button"><a href="{% url 'tema' %}">Nová téma</a></button>
+        <h1>Stredoškolská odborná činnosť</h1>
         <h3>SPS-IT</h3>
     </div>
 
     <div class="filter-section">
-        <label for="filter-nazov">Filtrovať podľa názvu:</label>
+        <label for="filter-nazov">Názov:</label>
         <input type="text" id="filter-nazov" oninput="filterItems()">
         
-        <label for="filter-ucitel">Filtrovať podľa učiteľa:</label>
+        <label for="filter-ucitel">Konzultant:</label>
         <select id="filter-ucitel" onchange="filterItems()">
             <option value="">Všetci</option>
             {% for ucitel in ucitelia %}
@@ -76,12 +133,12 @@
             {% endfor %}
         </select>
         
-        <label for="filter-dostupnost">Filtrovať podľa dostupnosti:</label>
+        <label for="filter-dostupnost">Dostupnosť:</label>
         <select id="filter-dostupnost" onchange="filterItems()">
             <option value="">Všetko</option>
-            <option value="Voľne">Voľne</option>
-            <option value="Obsadené">Obsadené</option>
-            <option value="Čakajuce">Čakajuce</option>
+            {% for temy in tema %}
+            <option value="{{temy.dostupnost}}">{{temy.dostupnost}}</option>
+            {% endfor %}
         </select>
     </div>
 
