@@ -46,9 +46,9 @@ class Tema(models.Model):
     konzultant = models.ForeignKey(Ucitel, on_delete=models.SET_NULL, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=True)
     CHOICES = (
-        ('VO', 'Voľne'),
-        ('CA', 'Čakajúce'),
-        ('OB', 'Obsadené'),
+        ('Voľne', 'Voľne'),
+        ('Čakajúce', 'Čakajúce'),
+        ('Obsadené', 'Obsadené'),
     )
     dostupnost = models.CharField(max_length=300, choices = CHOICES)
 

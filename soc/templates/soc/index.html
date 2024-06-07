@@ -1,12 +1,62 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPS-IT škola</title>
-    <link href="{% static 'skola/style.css' %}" rel="stylesheet">
-   
+    <title>Výber Ročníkových Prác</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .title {
+            text-align: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 40px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title h1 {
+            margin: 0;
+            font-size: 48px;
+            font-weight: 300;
+        }
+        
+        .title h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        
+        .filter-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .filter-section label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .filter-section input, .filter-section select {
+            padding:
+        
+    </style>
 </head>
 <body>
     <div class="title">
@@ -14,38 +64,68 @@
         <h3>SPS-IT</h3>
     </div>
 
-    <div class="sections">
-        {% if ucitelia %}
-        <div class="container">
-            <h2><a href="{% url 'ucitelia' %}">Učitelia:</a></h2>
-            <ul>
-                {% for ucitel in ucitelia %}
-                <li>
-                    <a href="{% url 'ucitel' ucitel=ucitel.id %}">
-                    {{ucitel}}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-
-        {% if studenti %}
-        <div class="container">
-            <h2><a href="{% url 'studenti' %}">Študenti:</a></h2>
-            <ul>
-                {% for student in studenti %}
-                <li>
-                    <a href="{% url 'student' student=student.id %}">
-                    {{student}}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-      
+    <div class="filter-section">
+        <label for="filter-nazov">Filtrovať podľa názvu:</label>
+        <input type="text" id="filter-nazov" oninput="filterItems()">
+        
+        <label for="filter-ucitel">Filtrovať podľa učiteľa:</label>
+        <select id="filter-ucitel" onchange="filterItems()">
+            <option value="">Všetci</option>
+            {% for ucitel in ucitelia %}
+            <option value="{{ ucitel.titul }} {{ ucitel.meno }} {{ ucitel.priezvisko }}">{{ ucitel.titul }} {{ ucitel.meno }} {{ ucitel.priezvisko }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="filter-dostupnost">Filtrovať podľa dostupnosti:</label>
+        <select id="filter-dostupnost" onchange="filterItems()">
+            <option value="">Všetko</option>
+            <option value="Voľne">Voľne</option>
+            <option value="Obsadené">Obsadené</option>
+            <option value="Čakajuce">Čakajuce</option>
+        </select>
     </div>
-    
+
+    <div class="sections">
+        {% if tema %}
+        <div class="container">
+            <ul id="tema-list">
+                {% for temy in tema %}
+                <li class="tema-item">
+                    <h1 class="tema-title">{{temy.nazov}}</h1>
+                    <p class="tema-description">{{temy.popis}}</p>
+                    <p class="tema-consultant"><strong>Konzultant:</strong> {{temy.konzultant.titul}} {{temy.konzultant.meno}} {{temy.konzultant.priezvisko}}</p>
+                    <p class="tema-student"><strong>Študent:</strong> {{temy.student.meno}} {{temy.student.priezvisko}} {{temy.student.trieda}}</p>
+                    <p class="tema-availability">{{temy.dostupnost}}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function filterItems() {
+            var inputNazov = document.getElementById('filter-nazov').value.toLowerCase();
+            var inputUcitel = document.getElementById('filter-ucitel').value.toLowerCase();
+            var inputDostupnost = document.getElementById('filter-dostupnost').value.toLowerCase();
+            var items = document.querySelectorAll('.tema-item');
+            
+            items.forEach(function(item) {
+                var title = item.querySelector('.tema-title').textContent.toLowerCase();
+                var consultant = item.querySelector('.tema-consultant').textContent.toLowerCase();
+                var availability = item.querySelector('.tema-availability').textContent.toLowerCase();
+                
+                var matchesNazov = title.includes(inputNazov);
+                var matchesUcitel = consultant.includes(inputUcitel);
+                var matchesDostupnost = inputDostupnost === "" || availability.includes(inputDostupnost);
+                
+                if (matchesNazov && matchesUcitel && matchesDostupnost) {
+                    item.style.display = "";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+    </script>
 </body>
 </html>
