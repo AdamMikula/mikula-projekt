@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Výber Ročníkových Prác</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .title {
+            text-align: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 40px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .title h1 {
+            margin: 0;
+            font-size: 48px;
+            font-weight: 300;
+        }
+        
+        .title h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        
+        .new-topic-button {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        
+        .new-topic-button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .filter-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .filter-section label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .filter-section input, .filter-section select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .sections {
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        #tema-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .tema-item {
+            padding: 20px;
+            margin: 10px 0;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tema-title {
+            font-size: 24px;
+            margin: 0 0 10px;
+        }
+        
+        .tema-description {
+            margin: 0 0 10px;
+        }
+        
+        .tema-consultant, .tema-student, .tema-availability, .tema-odbor {
+            margin: 0;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="title">
+        <button class="new-topic-button"><a href="{% url 'soc' %}">Späť</a></button>
+        {% if tema %}
+        {% with temy=tema.0 %}
+        <h1>{{temy.student.meno}} {{temy.student.priezvisko}}</h1>
+        {% endwith %}
+        {% endif %}
+        <h3>Žiak - informacie</h3>
+    </div>
+
+    <div class="sections">
+        {% if tema %}
+        <div class="container">
+            <ul id="tema-list">
+                {% for temy in tema %}
+                <li class="tema-item">
+                    <h1 class="tema-title">{{temy.nazov}}</h1>
+                    <p class="tema-description">{{temy.popis}}</p>
+                    <p class="tema-consultant">
+                        <strong>Konzultant:</strong> <a href="{% url 'konzultant_detail' temy.konzultant.id %}">{{temy.konzultant.titul}} {{ temy.konzultant.meno }} {{ temy.konzultant.priezvisko }}</a>
+                    </p>
+                    <p class="tema-odbor"><strong>Odbor:</strong> {{temy.odbor}}</p>
+                    </form>
+                  
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

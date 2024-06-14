@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pridať Novú Tému</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Vytvoriť novú tému</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -12,114 +10,97 @@
             color: #333;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
-        .title {
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
             text-align: center;
             background-color: #007bff;
             color: #fff;
-            padding: 40px 0;
+            padding: 20px 0;
+            border-radius: 8px 8px 0 0;
+            margin: -20px -20px 20px -20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-        
-        .title h1 {
-            margin: 0;
-            font-size: 48px;
-            font-weight: 300;
-        }
-        
-        .title h3 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 300;
-        }
-        .form-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 100%;
-        }
-
-        .form-container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
         }
 
         .form-group label {
-            display: block;
-            margin-bottom: 5px;
             font-weight: bold;
         }
 
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .form-group button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
+        .btn-primary {
+            background-color: #28a745;
             border: none;
+            padding: 10px 20px;
+            font-size: 16px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
         }
 
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+
+        .btn-soc {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .btn-soc:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="title">
-        <h1>Stredoškolská odborná činnosť</h1>
-        <h3>SPS-IT</h3>
-    </div>
-    <div class="filter-section">
-    <div class="form-container">
-        <h2>Pridať Novú Tému</h2>
-        <form action="/add_tema" method="POST">
+    <div class="container">
+        <div class="back-button">
+            <a href="{% url 'soc' %}" class="btn-soc">Späť</a>
+        </div>
+        <h1>Vytvoriť novú tému</h1>
+        <form method="post">
+            {% csrf_token %}
             <div class="form-group">
-                <label for="nazov">Názov:</label>
-                <input type="text" id="nazov" name="nazov" required>
+                {{ form.nazov.label_tag }} {{ form.nazov }}
             </div>
             <div class="form-group">
-                <label for="popis">Popis:</label>
-                <textarea id="popis" name="popis" rows="4" required></textarea>
+                {{ form.popis.label_tag }} {{ form.popis }}
             </div>
             <div class="form-group">
-                <label for="konzultant">Konzultant:</label>
-                <input type="text" id="konzultant" name="konzultant" required>
+                {{ form.konzultant.label_tag }} {{ form.konzultant }}
             </div>
             <div class="form-group">
-                <label for="student">Študent:</label>
-                <input type="text" id="student" name="student" required>
+                {{ form.student.label_tag }} {{ form.student }}
             </div>
             <div class="form-group">
-                <label for="dostupnost">Dostupnosť:</label>
-                <select id="dostupnost" name="dostupnost" required>
-                    <option value="Voľne">Voľne</option>
-                    <option value="Obsadené">Obsadené</option>
-                    <option value="Čakajuce">Čakajúce</option>
-                </select>
+                {{ form.odbor.label_tag }} {{ form.odbor }}
             </div>
             <div class="form-group">
-                <button type="submit">Pridať Tému</button>
+                {{ form.konzultacie.label_tag }} (ak študent nieje, automaticky sa nastavi "0") {{ form.konzultacie }}
             </div>
+            <div class="form-group">
+                {{ form.dostupnost.label_tag }} (ak študent nieje, automaticky sa nastavi "voľne") {{ form.dostupnost }}
+            </div>
+            <button type="submit" class="btn btn-primary">Uložiť</button>
         </form>
-    </div>
     </div>
 </body>
 </html>

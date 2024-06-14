@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Výber Ročníkových Prác</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .title {
+            text-align: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 40px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .title h1 {
+            margin: 0;
+            font-size: 48px;
+            font-weight: 300;
+        }
+        
+        .title h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        
+        .new-topic-button {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #007bff; /* Zmena farby textu */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        
+        .new-topic-button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .filter-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .filter-section label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .filter-section input, .filter-section select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .sections {
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        #tema-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .tema-item {
+            padding: 20px;
+            margin: 10px 0;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tema-title {
+            font-size: 24px;
+            margin: 0 0 10px;
+        }
+        
+        .tema-description {
+            margin: 0 0 10px;
+        }
+        
+        .tema-consultant, .tema-student, .tema-availability, .tema-odbor {
+            margin: 0;
+        }
+        
+        /* Zmena farieb podľa dostupnosti */
+        .available {
+            background-color: green;
+            color: white;
+        }
+        
+        .partially-available {
+            background-color: orange;
+            color: white;
+        }
+        
+        .unavailable {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+        <button class="new-topic-button"><a href="{% url 'soc' %}">Späť</a></button>
+        {% if tema %}
+        {% with temy=tema.0 %}
+        <h1>{{temy.konzultant.titul}} {{temy.konzultant.meno}} {{temy.konzultant.priezvisko}}</h1>
+        {% endwith %}
+        {% endif %}
+        <h3>Konzultant - informacie</h3>
+    </div>
+
+    <div class="sections">
+        {% if tema %}
+        <div class="container">
+            <ul id="tema-list">
+                {% for temy in tema %}
+                <li class="tema-item">
+                    <h1 class="tema-title">{{temy.nazov}}</h1>
+                    <p class="tema-description">{{temy.popis}}</p>
+                    <p class="tema-student">
+                        <strong>Študent:</strong>
+                        {% if temy.student %}
+                            <a href="{% url 'student_detail' temy.student.id %}">{{temy.student.meno}} {{temy.student.priezvisko}}</a> 
+                        {% endif %}
+                    </p>
+                    <p class="tema-odbor"><strong>Odbor:</strong> {{temy.odbor}}</p>
+                    <form action="{% url 'update_konzultacie' temy.id %}" method="POST">
+                        {% csrf_token %}
+                        <label for="konzultacie">Počet konzultácií:</label>
+                        <select name="konzultacie" id="konzultacie">
+                            <option value="0" {% if temy.konzultacie == 0 %} selected {% endif %}>0</option>
+                            <option value="1" {% if temy.konzultacie == 1 %} selected {% endif %}>1</option>
+                            <option value="2" {% if temy.konzultacie == 2 %} selected {% endif %}>2</option>
+                            <option value="3" {% if temy.konzultacie == 3 %} selected {% endif %}>3</option>
+                        </select>
+                        <button type="submit">Uložiť</button>
+                        (ak študent nieje, zmena sa neuloži)
+                    </form>
+                    <p class="tema-availability 
+                        {% if temy.dostupnost == 'Dostupné' %}available{% elif temy.dostupnost == 'Čiastočne dostupné' %}partially-available{% else %}unavailable{% endif %}">
+                        {{temy.dostupnost}}
+                    </p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
